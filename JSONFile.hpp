@@ -27,6 +27,8 @@ class JSONFile{
 
     JSONarray* create_array(std::istream& is);
 
+    void ignoreSpaces(std::istream& is);
+
 };
 
 

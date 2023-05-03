@@ -14,7 +14,7 @@ std::string JSONString::getType() const
     return "string";
 }
 
-void JSONString::set_value(const char* el)
+void JSONString::set_value(const std::string el)
 {
     this->value = el; 
 }

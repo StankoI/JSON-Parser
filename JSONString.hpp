@@ -16,7 +16,7 @@ class JSONString : public JSONBase{
 
     std::string getType() const;
 
-    void set_value(const char* el);
+    void set_value(const std::string el);
 
 
 };
