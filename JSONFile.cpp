@@ -54,6 +54,26 @@ JSONBase* JSONFile::create(std::istream& is){
     }
 }
 
+    JSONString* JSONFile::create_string(std::istream& is){
+
+    };
+
+    JSONObject* JSONFile::create_object(std::istream& is){
+
+    };
+
+    JSONNumber* JSONFile::create_number(std::istream& is){
+
+    }; 
+
+    JSONbool* JSONFile::create_bool(std::istream& is){
+
+    };
+
+    JSONarray* JSONFile::create_array(std::istream& is){
+        
+    };
+
 int main()
 {
     JSONFile a;

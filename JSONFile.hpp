@@ -17,6 +17,16 @@ class JSONFile{
 
     JSONBase* create(std::istream& is); 
 
+    JSONString* create_string(std::istream& is);
+
+    JSONObject* create_object(std::istream& is);
+
+    JSONNumber* create_number(std::istream& is); 
+
+    JSONbool* create_bool(std::istream& is);
+
+    JSONarray* create_array(std::istream& is);
+
 };
 
 
