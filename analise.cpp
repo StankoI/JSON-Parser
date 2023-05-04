@@ -25,4 +25,5 @@ std::string Analise::invest(const char el)
         {
             return "array"; 
         }
+        return "";
     }

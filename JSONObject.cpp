@@ -10,12 +10,10 @@ void JSONObject::print() const{
 
     for(size_t i = 0; i < this->key_value.size(); i++)
     {
-        std::cout << key_value[i].first; 
+        std::cout << key_value[i].first << " "; 
         key_value[i].second->print();
+        std::cout << '\n';
     }
-
-    // std::cout << key_value.first << " ";
-    // key_value.second->print(); 
 };
 
 std::string JSONObject::getType() const{

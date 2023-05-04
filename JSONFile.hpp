@@ -29,6 +29,8 @@ class JSONFile{
 
     void ignoreSpaces(std::istream& is);
 
+    bool is_digit(const char el);
+
 };
 
 

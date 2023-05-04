@@ -3,6 +3,10 @@
 #include <string>
 #include "JSONFile.hpp"
 
+bool JSONFile::is_digit(const char el){
+    return el >= '0' && el <= '9'; 
+}
+
 void JSONFile::ignoreSpaces(std::istream &is)
 {
     do
@@ -14,25 +18,35 @@ void JSONFile::ignoreSpaces(std::istream &is)
 
 JSONBase *JSONFile::create(std::istream &is)
 {
+    if(is.peek() == '{')
+    {
+        JSONObject* org = new JSONObject;
+        org = create_object(is);
+        return org;
+    }
+    return nullptr;
 }
 
 JSONString *JSONFile::create_string(std::istream &is)
 {
-    JSONString str("");
+    JSONString* str = new JSONString("");
     std::string temp;
     getline(is, temp, '\"');
-    str.set_value(temp);
+    str->set_value(temp);
 
-    return &str;
+    return str;
 };
 
 JSONObject *JSONFile::create_object(std::istream &is)
 {
+    JSONObject* obj = new JSONObject; 
     while (is.peek() != '}')
     {
         ignoreSpaces(is);
+        // std::cout << (char)is.peek();
 
         std::string str; // key
+        // std::cout << (char)is.peek();
 
         getline(is, str, ':');
 
@@ -47,23 +61,49 @@ JSONObject *JSONFile::create_object(std::istream &is)
             is.get();
             value = create_string(is);
 
+            std::pair<std::string, JSONBase*> temporary; 
+            temporary.first = str;
+            temporary.second = value; 
             
+            obj->add_element(temporary); 
         }
+        if(is_digit((char)is.peek()))
+        {
+            JSONNumber* num = new JSONNumber(0);
+            num = create_number(is);
+            std::pair<std::string, JSONBase*> temporary; 
+            temporary.first = str;
+            temporary.second = num; 
+
+            obj->add_element(temporary); 
+        }
+        if(is.peek() == 't' || is.peek() == 'f')
+        {
+            JSONbool* bull = new JSONbool(false);
+            bull = create_bool(is);
+            std::pair<std::string, JSONBase*> temporary;
+            temporary.first = str;
+            temporary.second = bull;
+
+            obj->add_element(temporary);
+        }
+        is.get();
     }
+    return obj; 
 };
 
 JSONNumber *JSONFile::create_number(std::istream &is)
 {
-    JSONNumber num(0);
+    JSONNumber* num = new JSONNumber(0);
     double temp;
     is >> temp;
-    num.set_value(temp);
-    return &num;
+    num->set_value(temp);
+    return num;
 };
 
 JSONbool *JSONFile::create_bool(std::istream &is)
 {
-    JSONbool Boolian(false); // ot lujata sledva vsichko : mitankin
+    JSONbool* Boolian = new JSONbool(false); // ot lujata sledva vsichko : mitankin
     bool temp;
     std::string bolian;
     getline(is, bolian);
@@ -75,24 +115,25 @@ JSONbool *JSONFile::create_bool(std::istream &is)
     {
         temp = false;
     }
-    Boolian.set_value(temp);
+    Boolian->set_value(temp);
 
-    return &Boolian;
+    return Boolian;
 };
 
 JSONarray *JSONFile::create_array(std::istream &is){
-
+    return nullptr; 
 };
 
 int main()
 {
-    // JSONFile a;
+    JSONFile a;
 
-    // std::ifstream is("test.json");
+    std::ifstream is("test.txt");
+    JSONBase* tr = a.create(is);
 
-    // a.create(is);
+    tr->print();
 
-    // return 0;
+    return 0;
 }
 
 // void ignoreSpaces(std::ifstream &is)
