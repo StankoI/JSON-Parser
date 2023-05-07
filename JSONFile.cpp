@@ -3,33 +3,44 @@
 #include <string>
 #include "JSONFile.hpp"
 
-bool JSONFile::is_digit(const char el){
-    return el >= '0' && el <= '9'; 
+bool JSONFile::is_digit(const char el)
+{
+    return el >= '0' && el <= '9';
 }
 
 void JSONFile::ignoreSpaces(std::istream &is)
 {
-    do
+    // do
+    // {
+    //     is.get();
+
+    // } while (is.peek() == ' ' || is.peek() == '\n' || is.peek() == '\t');
+    while (is.peek() == ' ' || is.peek() == '\n' || is.peek() == '\t')
     {
         is.get();
-
-    } while (is.peek() == ' ' || is.peek() == '\n' || is.peek() == '\t');
+    }
 }
 
 JSONBase *JSONFile::create(std::istream &is)
 {
-    if(is.peek() == '{')
+    if (is.peek() == '{')
     {
-        JSONObject* org = new JSONObject;
+        JSONObject *org = new JSONObject;
         org = create_object(is);
         return org;
+    }
+    if (is.peek() == '[')
+    {
+        JSONarray *arr = new JSONarray;
+        arr = create_array(is);
+        return arr;
     }
     return nullptr;
 }
 
 JSONString *JSONFile::create_string(std::istream &is)
 {
-    JSONString* str = new JSONString("");
+    JSONString *str = new JSONString("");
     std::string temp;
     getline(is, temp, '\"');
     str->set_value(temp);
@@ -39,14 +50,13 @@ JSONString *JSONFile::create_string(std::istream &is)
 
 JSONObject *JSONFile::create_object(std::istream &is)
 {
-    JSONObject* obj = new JSONObject; 
+    JSONObject *MAINobj = new JSONObject;
+    is.get();
     while (is.peek() != '}')
     {
         ignoreSpaces(is);
-        // std::cout << (char)is.peek();
 
         std::string str; // key
-        // std::cout << (char)is.peek();
 
         getline(is, str, ':');
 
@@ -57,44 +67,78 @@ JSONObject *JSONFile::create_object(std::istream &is)
 
         if (is.peek() == '\"')
         {
-            JSONString* value = new JSONString("");
+            JSONString *value = new JSONString("");
             is.get();
             value = create_string(is);
 
-            std::pair<std::string, JSONBase*> temporary; 
+            std::pair<std::string, JSONBase *> temporary;
             temporary.first = str;
-            temporary.second = value; 
-            
-            obj->add_element(temporary); 
+            temporary.second = value->clone();
+            delete value;
+
+            MAINobj->add_element(temporary);
         }
-        if(is_digit((char)is.peek()))
+
+        if (is_digit((char)is.peek()))
         {
-            JSONNumber* num = new JSONNumber(0);
+            JSONNumber *num = new JSONNumber(0);
             num = create_number(is);
-            std::pair<std::string, JSONBase*> temporary; 
+            std::pair<std::string, JSONBase *> temporary;
             temporary.first = str;
-            temporary.second = num; 
+            temporary.second = num->clone();
+            delete num;
 
-            obj->add_element(temporary); 
+            MAINobj->add_element(temporary);
         }
-        if(is.peek() == 't' || is.peek() == 'f')
+
+        if (is.peek() == 't' || is.peek() == 'f')
         {
-            JSONbool* bull = new JSONbool(false);
+            JSONbool *bull = new JSONbool(false);
             bull = create_bool(is);
-            std::pair<std::string, JSONBase*> temporary;
+            std::pair<std::string, JSONBase *> temporary;
             temporary.first = str;
-            temporary.second = bull;
+            temporary.second = bull->clone();
+            delete bull;
 
-            obj->add_element(temporary);
+            MAINobj->add_element(temporary);
         }
-        is.get();
+        if (is.peek() == '[')
+        {
+            JSONarray *arr = new JSONarray;
+            arr = create_array(is);
+            is.get();
+            std::pair<std::string, JSONBase *> temporary;
+            temporary.first = str;
+            temporary.second = arr->clone(); // tuka e vajno
+            delete arr;
+
+            MAINobj->add_element(temporary);
+        }
+
+        if (is.peek() == '{')
+        {
+            JSONObject *object = new JSONObject;
+            object = create_object(is);
+            is.get();
+            std::pair<std::string, JSONBase *> temporary;
+            temporary.first = str;
+            temporary.second = object->clone(); // tuk e za object
+            delete object;
+
+            MAINobj->add_element(temporary);
+        }
+
+        if (is.peek() != '}')
+        {
+            is.get();
+        }
     }
-    return obj; 
+    return MAINobj;
 };
 
 JSONNumber *JSONFile::create_number(std::istream &is)
 {
-    JSONNumber* num = new JSONNumber(0);
+    JSONNumber *num = new JSONNumber(0);
     double temp;
     is >> temp;
     num->set_value(temp);
@@ -103,7 +147,7 @@ JSONNumber *JSONFile::create_number(std::istream &is)
 
 JSONbool *JSONFile::create_bool(std::istream &is)
 {
-    JSONbool* Boolian = new JSONbool(false); // ot lujata sledva vsichko : mitankin
+    JSONbool *Boolian = new JSONbool(false); // ot lujata sledva vsichko : mitankin
     bool temp;
     std::string bolian;
     getline(is, bolian);
@@ -120,105 +164,154 @@ JSONbool *JSONFile::create_bool(std::istream &is)
     return Boolian;
 };
 
-JSONarray *JSONFile::create_array(std::istream &is){
-    return nullptr; 
+JSONarray *JSONFile::create_array(std::istream &is)
+{
+    JSONarray *array = new JSONarray;
+    is.get();
+    while (is.peek() != ']')
+    {
+        if (is.peek() == ' ')
+        {
+            ignoreSpaces(is);
+        }
+
+        if (is.peek() == '\"')
+        {
+            JSONString *value = new JSONString("");
+            is.get();
+            value = create_string(is);
+
+            array->add(value->clone());
+            delete value;
+        }
+
+        if (is_digit(is.peek()))
+        {
+            JSONNumber *num = new JSONNumber(0);
+            num = create_number(is);
+
+            array->add(num->clone());
+            delete num;
+        }
+
+        if (is.peek() == 't' || is.peek() == 'f')
+        {
+            JSONbool *bull = new JSONbool(false);
+            bull = create_bool(is);
+
+            array->add(bull->clone());
+            delete bull;
+        }
+
+        if (is.peek() == '{')
+        {
+            JSONObject *obj = new JSONObject;
+            obj = create_object(is);
+            // std::cout << (char)is.peek();
+            is.get();
+
+            array->add(obj->clone());
+            delete obj;
+        }
+
+        if (is.peek() == '[')
+        {
+            JSONarray *arr = new JSONarray;
+            arr = create_array(is);
+            is.get();
+
+            array->add(arr->clone()); // tuka e vajno
+            delete arr;
+        }
+
+        if (is.peek() != ']')
+        {
+            is.get();
+        }
+    }
+    return array;
 };
+
+bool validate(std::ifstream& is)
+{
+    std::size_t quotationMarksCounter = 0;
+    std::vector<char> counter; 
+    while(is)
+    {
+        if(is.peek() == '\"')
+        {
+            quotationMarksCounter++;
+        }
+        if(is.peek() == '{')
+        {
+            counter.push_back('{');
+        }
+        if(is.peek() == '[')
+        {
+            counter.push_back('['); 
+        }
+        if(is.peek() == '}')
+        {
+            if(counter[counter.size() - 1] == '{')
+            {
+                counter.pop_back();
+            }
+            else
+            {
+                counter.push_back('}'); 
+            }
+        }
+        if(is.peek() == ']')
+        {
+            if(counter[counter.size()-1] == '[')
+            {
+                counter.pop_back();
+            }
+            else
+            {
+                counter.push_back(']'); 
+            }
+        }
+        is.get();
+    }
+    if(!counter.empty())
+    {
+        std::cout << "there is a problem with the braces";
+        return false;
+    }
+    if(quotationMarksCounter%2 != 0)
+    {
+        std::cout << "there is a problem with quotation marks";
+        return false;
+    }
+    return true; 
+}
 
 int main()
 {
     JSONFile a;
 
     std::ifstream is("test.txt");
-    JSONBase* tr = a.create(is);
+    JSONBase *tr = a.create(is);
 
-    tr->print();
+    tr->search("wife"); 
+
+    is.close();
+
+    // std::ifstream in("test.txt");
+    // if (!validate(is))
+    // {
+    //     is.close();
+    //     return 0;
+    // }
+    // else{
+    //     std::cout << "everything is fine";
+    // }
+    
+
+    // is.close();
+
+    // validate(is);
 
     return 0;
 }
-
-// void ignoreSpaces(std::ifstream &is)
-// {
-//     do
-//     {
-//         is.get();
-
-//     } while (is.peek() == ' ' || is.peek() == '\n' || is.peek() == '\t');
-
-//     // while(is.peek() == ' ' || is.peek() == '\n' || is.peek() == '\t')
-//     // {
-//     //     is.get();
-//     // }
-// }
-
-// std::string createString(std::ifstream &is)
-// {
-//     std::string temp;
-//     getline(is, temp, '\"');
-//     return temp;
-// }
-
-// bool is_digit(const char a)
-// {
-//     return a >= '0' && a <= '9';
-// }
-
-// int main()
-// {
-//     std::ifstream is("test.txt");
-
-//     if (is.peek() == '{')
-//     {
-//         // create object
-//         while (is.peek() != '}')
-//         {
-//             ignoreSpaces(is);
-
-//             std::string str;
-
-//             getline(is, str, ':');
-
-//             // std::cout << (char)is.peek(); // investigate is.peek() // if ( '\"' ) = string ...
-//             if (is.peek() == ' ')
-//             {
-//                 ignoreSpaces(is);
-//             }
-
-//             if (is.peek() == '\"')
-//             {
-//                 std::string str2;
-//                 is.get(); // tuk vikam create na opredeleniq tip
-//                 str2 = createString(is);
-//                 // getline(is, str2, '\"');
-//                 std::cout << str << " " << str2 << '\n';
-//             }
-//             if (is_digit((char)is.peek()))
-//             {
-//                 double temp; // tuk vikam create na number
-//                 is >> temp;
-//                 std::cout << str << " " << temp << '\n';
-//             }
-//             if(is.peek() == 't' || is.peek() == 'f')
-//             {
-//                 bool temp;
-//                 std::string bolian;
-//                 getline(is,bolian);
-//                 if(bolian[0] == 't')
-//                 {
-//                     temp = true;
-//                 }
-//                 else
-//                 {
-//                     temp = false;
-//                 }
-//                 // is >> temp;
-//                 std::cout << str << " " << std::boolalpha << temp << '\n';
-
-//             }
-
-//             // std::cout << str << " " << str2 << '\n';
-//             // std::cout << (char)is.peek(); zapetaq !!!
-//             is.get();
-//         }
-//     }
-//     return 0;
-// }

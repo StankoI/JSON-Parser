@@ -6,7 +6,7 @@ JSONString::JSONString(const std::string _value) : value(_value) {}
 
 void JSONString::print() const
 {
-    std::cout << value;
+    std::cout << value << " ";
 }
 
 std::string JSONString::getType() const
@@ -17,4 +17,11 @@ std::string JSONString::getType() const
 void JSONString::set_value(const std::string el)
 {
     this->value = el; 
+}
+
+void JSONString::search(const std::string& element){};
+
+JSONString* JSONString::clone()
+{
+    return new JSONString(*this);
 }

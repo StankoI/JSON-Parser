@@ -22,6 +22,12 @@ class JSONObject : public JSONBase{
 
     void add_element(std::pair<std::string, JSONBase*>); 
 
+    JSONObject* clone();
+
+    void search(const std::string& element);
+
+    ~JSONObject();
+
 };
 
 #endif

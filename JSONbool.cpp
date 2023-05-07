@@ -5,7 +5,7 @@
 JSONbool::JSONbool(const bool _value):value(_value){};
 
 void JSONbool::print() const{
-    std::cout << std::boolalpha << value; 
+    std::cout << std::boolalpha << value << " "; 
 };
 
 std::string JSONbool::getType() const
@@ -15,4 +15,14 @@ std::string JSONbool::getType() const
 
 void JSONbool::set_value(bool b){
     this->value = b; 
+}
+
+JSONbool* JSONbool::clone()
+{
+    return new JSONbool(*this);
+}
+
+void JSONbool::search(const std::string& element)
+{
+
 }

@@ -18,6 +18,10 @@ class JSONNumber : public JSONBase
     std::string getType() const;
 
     void set_value(double number); 
+
+    JSONNumber* clone();
+
+    void search(const std::string& element);
 };
 
 #endif

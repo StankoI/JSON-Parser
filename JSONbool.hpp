@@ -16,6 +16,10 @@ public:
     std::string getType() const;
 
     void set_value(bool b);
+
+    JSONbool* clone();
+
+    void search(const std::string& element);
 };
 
 #endif

@@ -18,6 +18,9 @@ class JSONString : public JSONBase{
 
     void set_value(const std::string el);
 
+    JSONString* clone();
+
+    void search(const std::string& element);
 
 };
 

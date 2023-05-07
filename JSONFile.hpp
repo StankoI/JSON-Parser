@@ -31,6 +31,8 @@ class JSONFile{
 
     bool is_digit(const char el);
 
+    bool validate(std::ifstream& is);
+
 };
 
 

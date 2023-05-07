@@ -17,6 +17,14 @@ class JSONarray : public JSONBase
 
     std::string getType() const;
 
+    void add(JSONBase* element); 
+
+    JSONarray* clone();
+
+    void search(const std::string& element);
+    
+    ~JSONarray();
+
 };
 
 #endif

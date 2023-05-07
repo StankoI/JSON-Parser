@@ -1,5 +1,17 @@
 {
     name:"ivan"
-    salary:610
+    work:"fmi"
+    salary:2500
+    car:[
+{
+    brand:"BMW"
+}  
+{
+    brand:"LADA NIVA"
+    wife:[
+        "ivana"
+        "maria"
+]
+}      
+]
 }
-
