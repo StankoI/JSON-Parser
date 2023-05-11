@@ -2,16 +2,14 @@
     name:"ivan"
     work:"fmi"
     salary:2500
-    car:[
-{
-    brand:"BMW"
-}  
-{
-    brand:"LADA NIVA"
-    wife:[
-        "ivana"
-        "maria"
-]
-}      
+    car:{
+        brand:"VW"
+        model:"golf"
+}
+    arr:[
+        "neshto"
+        {
+            peis:"pedal"
+}
 ]
 }

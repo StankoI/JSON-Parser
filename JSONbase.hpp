@@ -1,5 +1,6 @@
 #ifndef JSON_BASE_HPP
 #define JSON_BASE_HPP
+#include <vector>
 
 class JSONBase
 {
@@ -15,6 +16,13 @@ class JSONBase
 
     virtual void search(const std::string& element) = 0; 
 
+    virtual bool set(std::vector<std::string>& reversePath, std::string str) = 0;
+
+    virtual void create(std::vector<std::string>& reversePath, std::string str) = 0;
+
+    virtual bool is_element_exist(std::vector<std::string>& reversePath) = 0;
+
+    virtual void delete_element(std::vector<std::string>& reversePath) = 0;
 };
 
 #endif

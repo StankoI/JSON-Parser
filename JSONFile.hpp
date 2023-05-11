@@ -8,8 +8,8 @@
 #include "JSONString.hpp"
 #include "JSONObject.hpp"
 #include "JSONbool.hpp"
-#include "analise.hpp"
-#include "factory.hpp"
+// #include "analise.hpp"
+// #include "factory.hpp"
 
 class JSONFile{
     

@@ -10,9 +10,19 @@ class JSONObject : public JSONBase{
 
     std::vector<std::pair<std::string, JSONBase*>> key_value;
 
+    void copy(const JSONObject& other);
+
+    void destroy();
+
+    bool is_element_exist(std::vector<std::string>& reversePath); 
+
     public:
 
     JSONObject(); 
+
+    JSONObject(const JSONObject& other);
+
+    JSONObject& operator=(const JSONObject& other);
     
     void print() const;
 
@@ -25,6 +35,12 @@ class JSONObject : public JSONBase{
     JSONObject* clone();
 
     void search(const std::string& element);
+
+    bool set(std::vector<std::string>& reversePath, std::string str);
+
+    void create(std::vector<std::string>& reversePath, std::string str);
+
+    void delete_element(std::vector<std::string>& reversePath); 
 
     ~JSONObject();
 

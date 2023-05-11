@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
 #include "JSONString.hpp"
 
-JSONString::JSONString(const std::string _value) : value(_value) {}
+
+JSONString::JSONString(const std::string _value) : value(_value){};
 
 void JSONString::print() const
 {
@@ -16,12 +19,27 @@ std::string JSONString::getType() const
 
 void JSONString::set_value(const std::string el)
 {
-    this->value = el; 
+    this->value = el;
 }
 
-void JSONString::search(const std::string& element){};
+void JSONString::search(const std::string &element){};
 
-JSONString* JSONString::clone()
+JSONString *JSONString::clone()
 {
     return new JSONString(*this);
 }
+
+bool JSONString::set(std::vector<std::string> &reversePath, std::string str)
+{
+    return true;
+};
+
+void JSONString::create(std::vector<std::string> &reversePath, std::string str)
+{}
+
+bool JSONString::is_element_exist(std::vector<std::string>& reversePath)
+{
+    return true;
+}
+
+void JSONString::delete_element(std::vector<std::string>& reversePath){}

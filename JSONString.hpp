@@ -3,6 +3,7 @@
 #include "JSONbase.hpp"
 #include <iostream>
 #include <string>
+#include <vector>
 
 class JSONString : public JSONBase{
     private:
@@ -22,6 +23,13 @@ class JSONString : public JSONBase{
 
     void search(const std::string& element);
 
+    bool set(std::vector<std::string>& reversePath, std::string str);
+
+    void create(std::vector<std::string>& reversePath, std::string str);
+
+    bool is_element_exist(std::vector<std::string>& reversePath);
+
+    void delete_element(std::vector<std::string>& reversePath);
 };
 
 #endif

@@ -5,7 +5,7 @@
 
 bool JSONFile::is_digit(const char el)
 {
-    return el >= '0' && el <= '9';
+    return el >= '0' && el <= '9' || el == '-';
 }
 
 void JSONFile::ignoreSpaces(std::istream &is)
@@ -35,6 +35,28 @@ JSONBase *JSONFile::create(std::istream &is)
         arr = create_array(is);
         return arr;
     }
+    // novo dopulnenie v sluchai che s4upi neshto 
+    if(is.peek() == '\"')
+    {
+        JSONString* str = new JSONString("");
+        str = create_string(is);
+        return str; 
+    }
+
+    if(is_digit(is.peek()))
+    {
+        JSONNumber* num = new JSONNumber(0);
+        num = create_number(is);
+        return num;
+    }
+
+    if(is.peek() == 't' || is.peek() == 'f')
+    {
+        JSONbool* bull = new JSONbool(false); 
+        bull = create_bool(is);
+        return bull; 
+    }
+
     return nullptr;
 }
 
@@ -42,6 +64,7 @@ JSONString *JSONFile::create_string(std::istream &is)
 {
     JSONString *str = new JSONString("");
     std::string temp;
+    is.get();
     getline(is, temp, '\"');
     str->set_value(temp);
 
@@ -68,7 +91,7 @@ JSONObject *JSONFile::create_object(std::istream &is)
         if (is.peek() == '\"')
         {
             JSONString *value = new JSONString("");
-            is.get();
+            // is.get();
             value = create_string(is);
 
             std::pair<std::string, JSONBase *> temporary;
@@ -178,7 +201,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
         if (is.peek() == '\"')
         {
             JSONString *value = new JSONString("");
-            is.get();
+            // is.get();
             value = create_string(is);
 
             array->add(value->clone());
@@ -291,27 +314,36 @@ int main()
 {
     JSONFile a;
 
-    std::ifstream is("test.txt");
+    std::ifstream is("test.txt"); 
+
     JSONBase *tr = a.create(is);
 
-    tr->search("wife"); 
+    tr->print(); 
+
+    // tr->set({"name"} , "\"Petur\""); 
+    std::vector<std::string> v;
+    
+    v.push_back("model");
+    v.push_back("car");
+    // std::cout << tr->set(v , "\"mercedes\"") << '\n';
+    // tr->set({"model" , "car"}, "\"benz220\"");
+
+    // tr->set({"peis","arr"}, "\"gotin\"");
+
+    // tr->print(); 
+
+    // std::cout << tr->set({"peis","arr"}, "\"gotin\"") << '\n'; 
+
+    // tr->print();
+
+    // tr->create(v , "\"toyota\""); // the path is reversed if you want to do something like this car:brand:mercedes you write("brand", "car")
+
+    // tr->delete_element(v);
+
+    tr->print();
 
     is.close();
 
-    // std::ifstream in("test.txt");
-    // if (!validate(is))
-    // {
-    //     is.close();
-    //     return 0;
-    // }
-    // else{
-    //     std::cout << "everything is fine";
-    // }
-    
-
-    // is.close();
-
-    // validate(is);
 
     return 0;
 }

@@ -9,9 +9,17 @@ class JSONarray : public JSONBase
     private:
     std::vector<JSONBase*> value; 
 
+    void copy(const JSONarray& other);
+
+    void destroy();
+
     public:
 
     JSONarray();
+
+    JSONarray(const JSONarray& other);
+
+    JSONarray& operator=(const JSONarray& other);
 
     void print() const;
 
@@ -22,6 +30,14 @@ class JSONarray : public JSONBase
     JSONarray* clone();
 
     void search(const std::string& element);
+
+    bool set(std::vector<std::string>& reversePath, std::string str); 
+
+    void create(std::vector<std::string>& reversePath, std::string str);
+
+    bool is_element_exist(std::vector<std::string>& reversePath);
+
+    void delete_element(std::vector<std::string>& reversePath);
     
     ~JSONarray();
 
