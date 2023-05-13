@@ -40,11 +40,19 @@ JSONarray &JSONarray::operator=(const JSONarray &other)
 
 void JSONarray::print() const
 {
+    std::cout << '[' << '\n';
     for (int i = 0; i < value.size(); i++)
     {
-        value[i]->print();
-        std::cout << '\n';
+        std::cout << "  ";
+        if (value[i] != nullptr)
+        {
+            value[i]->print();
+            std::cout << '\n';
+        }
+        // value[i]->print();
+        // std::cout << '\n';
     }
+    std::cout << ']';
 };
 
 std::string JSONarray::getType() const
@@ -144,20 +152,55 @@ bool JSONarray::is_element_exist(std::vector<std::string> &reversePath)
     {
         if (this->value[i]->getType() == "object")
         {
-            value[i]->is_element_exist(reversePath);
-            return true;
+            if (value[i] != nullptr)
+            {
+                value[i]->is_element_exist(reversePath);
+                return true;
+            }
+            // value[i]->is_element_exist(reversePath);
+            // return true;
         }
     }
     return false;
 }
 
-void JSONarray::delete_element(std::vector<std::string>& reversePath){
+void JSONarray::delete_element(std::vector<std::string> &reversePath)
+{
     for (std::size_t i = 0; i < this->value.size(); i++)
     {
         if (this->value[i]->getType() == "object")
         {
-            value[i]->delete_element(reversePath);
+            if (value[i] != nullptr)
+            {
+                value[i]->delete_element(reversePath);
+            }
+            // value[i]->delete_element(reversePath);
         }
+    }
+}
+
+void JSONarray::saves(std::vector<std::string> &reversePath, std::ofstream &os)
+{
+    if (reversePath.empty())
+    {
+        os << '[' << " "; 
+        for (std::size_t i = 0; i < value.size(); i++)
+        {
+            value[i]->saves(reversePath, os);
+        }
+        os << ']' << " "; 
+    }
+    else
+    {
+        os << '[' << " ";
+        for (std::size_t i = 0; i < this->value.size(); i++)
+        {
+            if (this->value[i]->getType() == "object")
+            {
+                value[i]->saves(reversePath, os);
+            }
+        }
+        os << ']' << " ";
     }
 }
 

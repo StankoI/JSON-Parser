@@ -9,15 +9,17 @@ class JSONString : public JSONBase{
     private:
     std::string value; 
 
+    bool is_element_exist(std::vector<std::string>& reversePath);
+
     public:
     
-    JSONString(const std::string _value); 
+    JSONString(const std::string& _value); 
 
     void print() const; 
 
     std::string getType() const;
 
-    void set_value(const std::string el);
+    void set_value(const std::string& el);
 
     JSONString* clone();
 
@@ -27,9 +29,11 @@ class JSONString : public JSONBase{
 
     void create(std::vector<std::string>& reversePath, std::string str);
 
-    bool is_element_exist(std::vector<std::string>& reversePath);
+    // bool is_element_exist(std::vector<std::string>& reversePath);
 
     void delete_element(std::vector<std::string>& reversePath);
+
+    void saves(std::vector<std::string>& reversePath, std::ofstream& os);
 };
 
 #endif

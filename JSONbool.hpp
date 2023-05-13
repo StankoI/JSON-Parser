@@ -9,6 +9,8 @@ class JSONbool : public JSONBase
 private:
     bool value;
 
+    bool is_element_exist(std::vector<std::string>& reversePath);
+
 public:
     JSONbool(const bool _value);
 
@@ -26,9 +28,11 @@ public:
 
     void create(std::vector<std::string>& reversePath, std::string str);
 
-    bool is_element_exist(std::vector<std::string>& reversePath);
+    // bool is_element_exist(std::vector<std::string>& reversePath);
 
     void delete_element(std::vector<std::string>& reversePath);
+
+    void saves(std::vector<std::string>& reversePath, std::ofstream& os);
 };
 
 #endif

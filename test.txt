@@ -3,8 +3,8 @@
     work:"fmi"
     salary:2500
     car:{
-        brand:"VW"
-        model:"golf"
+        brand:"volkswagen"
+        model:"golf 1.9tdi"
 }
     arr:[
         "neshto"

@@ -318,13 +318,14 @@ int main()
 
     JSONBase *tr = a.create(is);
 
-    tr->print(); 
+    // tr->print(); 
 
     // tr->set({"name"} , "\"Petur\""); 
     std::vector<std::string> v;
     
-    v.push_back("model");
-    v.push_back("car");
+    // v.push_back("peis");
+    // v.push_back("arr");
+   
     // std::cout << tr->set(v , "\"mercedes\"") << '\n';
     // tr->set({"model" , "car"}, "\"benz220\"");
 
@@ -340,9 +341,25 @@ int main()
 
     // tr->delete_element(v);
 
-    tr->print();
+    // tr->set(v , "\"passat 1.9tdi chiposan\""); 
 
     is.close();
+
+    std::ofstream os("saver.txt");
+
+    tr->saves(v, os);
+
+    os.close();
+
+    std::ifstream in("saver.txt");
+
+    JSONBase* lerem = a.create(in);
+
+    lerem->print();
+
+    // tr->print();
+
+    
 
 
     return 0;

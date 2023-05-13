@@ -10,6 +10,8 @@ class JSONNumber : public JSONBase
     private:
     double value; 
 
+    bool is_element_exist(std::vector<std::string>& reversePath);
+
     public:
 
     JSONNumber(const double _value); 
@@ -28,9 +30,11 @@ class JSONNumber : public JSONBase
 
     void create(std::vector<std::string>& reversePath, std::string str);
 
-    bool is_element_exist(std::vector<std::string>& reversePath);
+    // bool is_element_exist(std::vector<std::string>& reversePath);
 
     void delete_element(std::vector<std::string>& reversePath);
+
+    void saves(std::vector<std::string>& reversePath, std::ofstream& os);
 };
 
 #endif

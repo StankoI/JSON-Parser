@@ -1,6 +1,9 @@
 #ifndef JSON_BASE_HPP
 #define JSON_BASE_HPP
 #include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
 
 class JSONBase
 {
@@ -23,6 +26,8 @@ class JSONBase
     virtual bool is_element_exist(std::vector<std::string>& reversePath) = 0;
 
     virtual void delete_element(std::vector<std::string>& reversePath) = 0;
+
+    virtual void saves(std::vector<std::string>& reversePath, std::ofstream& os) = 0;
 };
 
 #endif

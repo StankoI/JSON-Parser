@@ -2,6 +2,7 @@
 #define JSON_OBJECT_HPP
 #include <string>
 #include <vector>
+#include <fstream>
 #include "JSONbase.hpp"
 
 class JSONObject : public JSONBase{
@@ -41,6 +42,8 @@ class JSONObject : public JSONBase{
     void create(std::vector<std::string>& reversePath, std::string str);
 
     void delete_element(std::vector<std::string>& reversePath); 
+
+    void saves(std::vector<std::string>& reversePath, std::ofstream& os); 
 
     ~JSONObject();
 
