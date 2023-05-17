@@ -43,7 +43,13 @@ class JSONObject : public JSONBase{
 
     void delete_element(std::vector<std::string>& reversePath); 
 
+    void move(std::vector<std::string>& from, std::vector<std::string>& to);
+
     void saves(std::vector<std::string>& reversePath, std::ofstream& os); 
+
+    JSONBase* get(std::vector<std::string>& reversePath); 
+
+    void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element);
 
     ~JSONObject();
 

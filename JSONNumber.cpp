@@ -40,7 +40,15 @@ bool JSONNumber::is_element_exist(std::vector<std::string> &reversePath)
 
 void JSONNumber::delete_element(std::vector<std::string> &reversePath) {}
 
+void JSONNumber::move(std::vector<std::string> &from, std::vector<std::string> &to){}
+
 void JSONNumber::saves(std::vector<std::string>& reversePath, std::ofstream& os)
 {
     os << value << ' '; 
 }
+
+JSONBase* JSONNumber::get(std::vector<std::string>& reversePath){
+    return this; 
+}
+
+void JSONNumber::addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element){}

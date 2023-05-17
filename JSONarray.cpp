@@ -60,7 +60,7 @@ std::string JSONarray::getType() const
     return "array";
 };
 
-void JSONarray::add(JSONBase *element)
+void JSONarray::add_element(JSONBase *element)
 {
     value.push_back(element);
 }
@@ -70,7 +70,7 @@ JSONarray *JSONarray::clone()
     JSONarray *temp = new JSONarray;
     for (std::size_t i = 0; i < value.size(); i++)
     {
-        temp->add(value[i]->clone());
+        temp->add_element(value[i]->clone());
     }
     return temp;
 }
@@ -183,12 +183,12 @@ void JSONarray::saves(std::vector<std::string> &reversePath, std::ofstream &os)
 {
     if (reversePath.empty())
     {
-        os << '[' << " "; 
+        os << '[' << " ";
         for (std::size_t i = 0; i < value.size(); i++)
         {
             value[i]->saves(reversePath, os);
         }
-        os << ']' << " "; 
+        os << ']' << " ";
     }
     else
     {
@@ -202,6 +202,40 @@ void JSONarray::saves(std::vector<std::string> &reversePath, std::ofstream &os)
         }
         os << ']' << " ";
     }
+}
+
+void JSONarray::move(std::vector<std::string> &from, std::vector<std::string> &to) {}
+
+JSONBase *JSONarray::get(std::vector<std::string> &reversePath)
+{
+    return this;
+}
+
+void JSONarray::addbByPath(std::vector<std::string> &reversePath, const std::string &key, JSONBase *element)
+{
+    // for (std::size_t i = 0; i < this->value.size(); i++)
+    // {
+        if(reversePath.empty())
+        {
+            std::pair<std::string, JSONBase*> temp;
+            temp.first = key;
+            temp.second = element->clone();
+            JSONObject* obj = new JSONObject;
+            obj->add_element(temp);
+            value.push_back(obj->clone()); 
+            delete obj; 
+        }
+        else
+        {
+            for(std::size_t i = 0; i < value.size(); i++)
+            {
+                if(value[i]->getType() == "object")
+                {
+                    value[i]->addbByPath(reversePath, key, element);
+                }
+            }
+        }
+    // }
 }
 
 JSONarray::~JSONarray()

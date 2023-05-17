@@ -170,6 +170,7 @@ bool JSONObject::set(std::vector<std::string> &reversePath, std::string str)
                 }
 
                 std::string temp = this->key_value[i].second->getType();
+
                 if (temp == "array")
                 {
                     if (temp != strConvert->getType())
@@ -182,6 +183,14 @@ bool JSONObject::set(std::vector<std::string> &reversePath, std::string str)
                     delete strConvert;
                     return true;
                 }
+                if (temp == "null")
+                {
+                    delete key_value[i].second;
+                    this->key_value[i].second = strConvert->clone();
+                    delete strConvert;
+                    return true;
+                }
+
                 if (temp == "object")
                 {
                     if (temp != strConvert->getType())
@@ -314,12 +323,19 @@ void JSONObject::delete_element(std::vector<std::string> &reversePath)
 
                 if (reversePath.empty())
                 {
-                    delete key_value[i].second;
+                    key_value.erase(key_value.begin()+i);
+                    // delete key_value[i].second;
                     // JSONString* empty = new JSONString(" ");
                     //  JSONBase* empty = new JSONString("");
                     //  key_value[i].second = empty->clone();
                     // delete empty;
-                    key_value[i].second = nullptr;
+                    // key_value[i].second = nullptr;
+                    // for (std::size_t j = i; j < this->key_value.size(); j++)
+                    // {
+                    //     key_value[j] = key_value[j + 1];
+                    // }
+                    // key_value.pop_back();
+                    return;
                 }
                 if (key_value[i].second != nullptr)
                 {
@@ -329,6 +345,74 @@ void JSONObject::delete_element(std::vector<std::string> &reversePath)
             }
         }
     }
+}
+
+JSONBase *JSONObject::get(std::vector<std::string> &reversePath)
+{
+    // JSONBase* temp;
+    for (std::size_t i = 0; i < key_value.size(); i++)
+    {
+        if (reversePath[reversePath.size() - 1] == key_value[i].first)
+        {
+            reversePath.pop_back();
+
+            if (reversePath.empty())
+            {
+                // std::cout << "empty\n";
+                return key_value[i].second->clone();
+            }
+            if (key_value[i].second != nullptr)
+            {
+                // std::cout << "recursive\n";
+                return key_value[i].second->get(reversePath);
+            }
+        }
+    }
+    // std::cout << "nullptr\n";
+    return nullptr;
+}
+
+void JSONObject::addbByPath(std::vector<std::string> &reversePath, const std::string &key, JSONBase *element)
+{
+    if (reversePath.empty())
+    {
+        std::pair<std::string, JSONBase *> temp;
+        temp.first = key;
+        temp.second = element->clone();
+        key_value.push_back(temp);
+    }
+    else
+    {
+        for (std::size_t i = 0; i < this->key_value.size(); i++)
+        {
+            if (reversePath[reversePath.size() - 1] == key_value[i].first)
+            {
+                reversePath.pop_back();
+                // if (reversePath.empty())
+                // {
+                //     // std::pair<std::string, JSONBase *> temp;
+                //     // temp.first = key;
+                //     // temp.second = element->clone();
+                //     // key_value.push_back(temp);
+                // }
+                if (key_value[i].second != nullptr)
+                {
+                    key_value[i].second->addbByPath(reversePath, key, element);
+                }
+            }
+        }
+    }
+}
+
+void JSONObject::move(std::vector<std::string> &from, std::vector<std::string> &to)
+{
+    std::string key = from[0]; 
+    std::vector<std::string> fromCopy;
+    fromCopy = from;
+    JSONBase* fr = get(fromCopy);
+    delete_element(from);
+    addbByPath(to, key, fr->clone());
+    // delete fr; 
 }
 
 void JSONObject::saves(std::vector<std::string> &reversePath, std::ofstream &os)
@@ -350,7 +434,7 @@ void JSONObject::saves(std::vector<std::string> &reversePath, std::ofstream &os)
     }
     else
     {
-        os << '{' << " " ;
+        os << '{' << " ";
         for (std::size_t i = 0; i < this->key_value.size(); i++)
         {
             os << key_value[i].first << ':';

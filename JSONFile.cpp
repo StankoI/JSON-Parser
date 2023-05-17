@@ -35,26 +35,26 @@ JSONBase *JSONFile::create(std::istream &is)
         arr = create_array(is);
         return arr;
     }
-    // novo dopulnenie v sluchai che s4upi neshto 
-    if(is.peek() == '\"')
+    // novo dopulnenie v sluchai che s4upi neshto
+    if (is.peek() == '\"')
     {
-        JSONString* str = new JSONString("");
+        JSONString *str = new JSONString("");
         str = create_string(is);
-        return str; 
+        return str;
     }
 
-    if(is_digit(is.peek()))
+    if (is_digit(is.peek()))
     {
-        JSONNumber* num = new JSONNumber(0);
+        JSONNumber *num = new JSONNumber(0);
         num = create_number(is);
         return num;
     }
 
-    if(is.peek() == 't' || is.peek() == 'f')
+    if (is.peek() == 't' || is.peek() == 'f')
     {
-        JSONbool* bull = new JSONbool(false); 
+        JSONbool *bull = new JSONbool(false);
         bull = create_bool(is);
-        return bull; 
+        return bull;
     }
 
     return nullptr;
@@ -132,7 +132,7 @@ JSONObject *JSONFile::create_object(std::istream &is)
             is.get();
             std::pair<std::string, JSONBase *> temporary;
             temporary.first = str;
-            temporary.second = arr->clone(); // tuka e vajno
+            temporary.second = arr->clone();
             delete arr;
 
             MAINobj->add_element(temporary);
@@ -145,8 +145,20 @@ JSONObject *JSONFile::create_object(std::istream &is)
             is.get();
             std::pair<std::string, JSONBase *> temporary;
             temporary.first = str;
-            temporary.second = object->clone(); // tuk e za object
+            temporary.second = object->clone();
             delete object;
+
+            MAINobj->add_element(temporary);
+        }
+
+        if (is.peek() == 'n')
+        {
+            JSONNull *null_value = new JSONNull;
+            null_value = create_null(is);
+            std::pair<std::string, JSONBase *> temporary;
+            temporary.first = str;
+            temporary.second = null_value->clone();
+            delete null_value;
 
             MAINobj->add_element(temporary);
         }
@@ -167,6 +179,15 @@ JSONNumber *JSONFile::create_number(std::istream &is)
     num->set_value(temp);
     return num;
 };
+
+JSONNull *JSONFile::create_null(std::istream &is)
+{
+    JSONNull *null_value = new JSONNull;
+    std::string reader;
+    getline(is, reader);
+
+    return null_value;
+}
 
 JSONbool *JSONFile::create_bool(std::istream &is)
 {
@@ -204,7 +225,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
             // is.get();
             value = create_string(is);
 
-            array->add(value->clone());
+            array->add_element(value->clone());
             delete value;
         }
 
@@ -213,7 +234,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
             JSONNumber *num = new JSONNumber(0);
             num = create_number(is);
 
-            array->add(num->clone());
+            array->add_element(num->clone());
             delete num;
         }
 
@@ -222,7 +243,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
             JSONbool *bull = new JSONbool(false);
             bull = create_bool(is);
 
-            array->add(bull->clone());
+            array->add_element(bull->clone());
             delete bull;
         }
 
@@ -233,8 +254,17 @@ JSONarray *JSONFile::create_array(std::istream &is)
             // std::cout << (char)is.peek();
             is.get();
 
-            array->add(obj->clone());
+            array->add_element(obj->clone());
             delete obj;
+        }
+
+        if (is.peek() == 'n')
+        {
+            JSONNull *null_value = new JSONNull;
+            null_value = create_null(is);
+
+            array->add_element(null_value->clone());
+            delete null_value;
         }
 
         if (is.peek() == '[')
@@ -243,7 +273,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
             arr = create_array(is);
             is.get();
 
-            array->add(arr->clone()); // tuka e vajno
+            array->add_element(arr->clone()); // tuka e vajno
             delete arr;
         }
 
@@ -255,85 +285,114 @@ JSONarray *JSONFile::create_array(std::istream &is)
     return array;
 };
 
-bool validate(std::ifstream& is)
+bool validate(std::ifstream &is)
 {
     std::size_t quotationMarksCounter = 0;
-    std::vector<char> counter; 
-    while(is)
+    std::vector<char> counter;
+    while (is)
     {
-        if(is.peek() == '\"')
+        if (is.peek() == '\"')
         {
             quotationMarksCounter++;
         }
-        if(is.peek() == '{')
+        if (is.peek() == '{')
         {
             counter.push_back('{');
         }
-        if(is.peek() == '[')
+        if (is.peek() == '[')
         {
-            counter.push_back('['); 
+            counter.push_back('[');
         }
-        if(is.peek() == '}')
+        if (is.peek() == '}')
         {
-            if(counter[counter.size() - 1] == '{')
+            if (counter[counter.size() - 1] == '{')
             {
                 counter.pop_back();
             }
             else
             {
-                counter.push_back('}'); 
+                counter.push_back('}');
             }
         }
-        if(is.peek() == ']')
+        if (is.peek() == ']')
         {
-            if(counter[counter.size()-1] == '[')
+            if (counter[counter.size() - 1] == '[')
             {
                 counter.pop_back();
             }
             else
             {
-                counter.push_back(']'); 
+                counter.push_back(']');
             }
         }
         is.get();
     }
-    if(!counter.empty())
+    if (!counter.empty())
     {
         std::cout << "there is a problem with the braces";
         return false;
     }
-    if(quotationMarksCounter%2 != 0)
+    if (quotationMarksCounter % 2 != 0)
     {
         std::cout << "there is a problem with quotation marks";
         return false;
     }
-    return true; 
+    return true;
 }
 
 int main()
 {
     JSONFile a;
 
-    std::ifstream is("test.txt"); 
+    std::ifstream is("test.txt");
 
     JSONBase *tr = a.create(is);
 
-    // tr->print(); 
+    // tr->print();
 
-    // tr->set({"name"} , "\"Petur\""); 
+    // tr->set({"name"} , "\"Petur\"");
     std::vector<std::string> v;
+    std::vector<std::string> l;
+    std::vector<std::string> empty;
+    v.push_back("brand");
+    v.push_back("car");
+
+    // tr->delete_element(v);
+
+    // tr->print();
+
+    l.push_back("pets");
+    l.push_back("human");
+
+    tr->move(v,l);
+
+    // tr->print();
+
+    // tr->get(v);
+
+    // tr->get(v)->print();
+    // JSONNumber aaaa(5);
+
+    // tr->addbByPath(v,"gosho", &aaaa); 
     
-    // v.push_back("peis");
-    // v.push_back("arr");
-   
+    std::ofstream osss("saver.txt");
+
+    tr->saves(empty, osss);
+    // JSONarray str;
+    // str.add(tr->get(l)->clone());
+    // str.print(); 
+    // tr->get(l)->print();
+
+    
+
     // std::cout << tr->set(v , "\"mercedes\"") << '\n';
     // tr->set({"model" , "car"}, "\"benz220\"");
 
-    // tr->set({"peis","arr"}, "\"gotin\"");
+    // tr->set(v, "\"passat\"");
 
-    // tr->print(); 
+    // tr->print();
 
-    // std::cout << tr->set({"peis","arr"}, "\"gotin\"") << '\n'; 
+    // std::cout << tr->set({"peis","arr"}, "\"gotin\"") << '\n';
 
     // tr->print();
 
@@ -341,26 +400,24 @@ int main()
 
     // tr->delete_element(v);
 
-    // tr->set(v , "\"passat 1.9tdi chiposan\""); 
+    // tr->set(v , "\"passat 1.9tdi chiposan\"");
 
     is.close();
 
-    std::ofstream os("saver.txt");
+    // std::ofstream os("saver.txt");
 
-    tr->saves(v, os);
+    // tr->move(v,l);
+    // tr->saves(v, os);
 
-    os.close();
+    // os.close();
 
-    std::ifstream in("saver.txt");
+    // std::ifstream in("saver.txt");
 
-    JSONBase* lerem = a.create(in);
+    // JSONBase* lerem = a.create(in);
 
-    lerem->print();
+    // lerem->print();
 
     // tr->print();
-
-    
-
 
     return 0;
 }

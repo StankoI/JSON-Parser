@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
 #include "JSONString.hpp"
 
 
@@ -9,7 +8,7 @@ JSONString::JSONString(const std::string& _value) : value(_value){};
 
 void JSONString::print() const
 {
-    std::cout << value << " ";
+    std::cout << this->value << " ";
 }
 
 std::string JSONString::getType() const
@@ -48,3 +47,11 @@ void JSONString::saves(std::vector<std::string>& reversePath, std::ofstream& os)
 {
     os << '\"' << value << '\"' << ' '; 
 }
+
+void JSONString::move(std::vector<std::string> &from, std::vector<std::string> &to){}
+
+JSONBase* JSONString::get(std::vector<std::string>& reversePath){
+    return this; 
+}
+
+void JSONString::addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element){}

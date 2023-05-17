@@ -15,7 +15,7 @@ class JSONString : public JSONBase{
     
     JSONString(const std::string& _value); 
 
-    void print() const; 
+    void print() const override; 
 
     std::string getType() const;
 
@@ -34,6 +34,12 @@ class JSONString : public JSONBase{
     void delete_element(std::vector<std::string>& reversePath);
 
     void saves(std::vector<std::string>& reversePath, std::ofstream& os);
+
+    void move(std::vector<std::string> &from, std::vector<std::string> &to);
+
+    void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element);
+
+    JSONBase* get(std::vector<std::string>& reversePath); 
 };
 
 #endif

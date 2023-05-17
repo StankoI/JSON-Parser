@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "JSONarray.hpp"
 #include "JSONNumber.hpp"
 #include "JSONString.hpp"
 #include "JSONObject.hpp"
 #include "JSONbool.hpp"
+#include "JSONNull.hpp"
 
 class JSONFile{
     
@@ -24,6 +26,8 @@ class JSONFile{
     JSONbool* create_bool(std::istream& is);
 
     JSONarray* create_array(std::istream& is);
+
+    JSONNull* create_null(std::istream& is);
 
     void ignoreSpaces(std::istream& is);
 

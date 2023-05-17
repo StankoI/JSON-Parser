@@ -35,6 +35,12 @@ class JSONNumber : public JSONBase
     void delete_element(std::vector<std::string>& reversePath);
 
     void saves(std::vector<std::string>& reversePath, std::ofstream& os);
+
+    void move(std::vector<std::string> &from, std::vector<std::string> &to);
+
+    JSONBase* get(std::vector<std::string>& reversePath);
+
+    void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element);
 };
 
 #endif

@@ -27,7 +27,7 @@ class JSONarray : public JSONBase
 
     std::string getType() const;
 
-    void add(JSONBase* element); 
+    void add_element(JSONBase* element); 
 
     JSONarray* clone();
 
@@ -42,6 +42,12 @@ class JSONarray : public JSONBase
     void delete_element(std::vector<std::string>& reversePath);
 
     void saves(std::vector<std::string>& reversePath, std::ofstream& os);
+
+    void move(std::vector<std::string> &from, std::vector<std::string> &to);
+
+    JSONBase* get(std::vector<std::string>& reversePath);
+
+    void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element);
     
     ~JSONarray();
 

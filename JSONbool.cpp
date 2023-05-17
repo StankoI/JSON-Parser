@@ -45,3 +45,11 @@ void JSONbool::saves(std::vector<std::string>& reversePath, std::ofstream& os)
 {
     os << value << ' '; 
 }
+
+void JSONbool::move(std::vector<std::string> &from, std::vector<std::string> &to){}
+
+JSONBase* JSONbool::get(std::vector<std::string>& reversePath){
+    return this;
+}
+
+void JSONbool::addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element){}

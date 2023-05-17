@@ -1,44 +1,43 @@
-#ifndef JSON_BOOL_HPP
-#define JSON_BOOL_HPP
+#ifndef JSON_NULL_HPP
+#define JSON_NULL_HPP
 #include <string>
 #include <vector>
+#include <fstream>
 #include "JSONbase.hpp"
 
-class JSONbool : public JSONBase
+class JSONNull : public JSONBase
 {
-private:
-    bool value;
+    private:
 
     bool is_element_exist(std::vector<std::string>& reversePath);
 
-public:
-    JSONbool(const bool _value);
+    public:
 
-    void print() const;
+    void print() const; 
 
-    std::string getType() const;
+    std::string getType() const; 
 
-    void set_value(bool b);
+    JSONBase* clone();
 
-    JSONbool* clone();
-
-    void search(const std::string& element);
+    void search(const std::string& element); 
 
     bool set(std::vector<std::string>& reversePath, std::string str);
 
     void create(std::vector<std::string>& reversePath, std::string str);
 
-    // bool is_element_exist(std::vector<std::string>& reversePath);
-
     void delete_element(std::vector<std::string>& reversePath);
 
-    void saves(std::vector<std::string>& reversePath, std::ofstream& os);
+    void saves(std::vector<std::string>& reversePath, std::ofstream& os); 
 
     void move(std::vector<std::string> &from, std::vector<std::string> &to);
 
-    JSONBase* get(std::vector<std::string>& reversePath); 
+    JSONBase* get(std::vector<std::string>& reversePath);
 
     void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element);
+
+    ~JSONNull();
+
 };
+
 
 #endif

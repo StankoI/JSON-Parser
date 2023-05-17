@@ -28,6 +28,12 @@ class JSONBase
     virtual void delete_element(std::vector<std::string>& reversePath) = 0;
 
     virtual void saves(std::vector<std::string>& reversePath, std::ofstream& os) = 0;
+
+    virtual void move(std::vector<std::string> &from, std::vector<std::string> &to) = 0;
+
+    virtual JSONBase* get(std::vector<std::string>& reversePath) = 0;
+
+    virtual void addbByPath(std::vector<std::string>& reversePath, const std::string& key, JSONBase* element) = 0;
 };
 
 #endif
