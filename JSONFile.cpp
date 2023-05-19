@@ -285,7 +285,7 @@ JSONarray *JSONFile::create_array(std::istream &is)
     return array;
 };
 
-bool validate(std::ifstream &is)
+bool JSONFile::validate(std::ifstream &is)
 {
     std::size_t quotationMarksCounter = 0;
     std::vector<char> counter;
@@ -340,84 +340,84 @@ bool validate(std::ifstream &is)
     return true;
 }
 
-int main()
-{
-    JSONFile a;
+// int main()
+// {
+//     JSONFile a;
 
-    std::ifstream is("test.txt");
+//     std::ifstream is("test.txt");
 
-    JSONBase *tr = a.create(is);
+//     JSONBase *tr = a.create(is);
 
-    // tr->print();
+//     // tr->print();
 
-    // tr->set({"name"} , "\"Petur\"");
-    std::vector<std::string> v;
-    std::vector<std::string> l;
-    std::vector<std::string> empty;
-    v.push_back("brand");
-    v.push_back("car");
+//     // tr->set({"name"} , "\"Petur\"");
+//     std::vector<std::string> v;
+//     std::vector<std::string> l;
+//     std::vector<std::string> empty;
+//     v.push_back("brand");
+//     v.push_back("car");
 
-    // tr->delete_element(v);
+//     // tr->delete_element(v);
 
-    // tr->print();
+//     // tr->print();
 
-    l.push_back("pets");
-    l.push_back("human");
+//     l.push_back("pets");
+//     l.push_back("human");
 
-    tr->move(v,l);
+//     tr->move(v,l);
 
-    // tr->print();
+//     // tr->print();
 
-    // tr->get(v);
+//     // tr->get(v);
 
-    // tr->get(v)->print();
-    // JSONNumber aaaa(5);
+//     // tr->get(v)->print();
+//     // JSONNumber aaaa(5);
 
-    // tr->addbByPath(v,"gosho", &aaaa); 
+//     // tr->addbByPath(v,"gosho", &aaaa); 
     
-    std::ofstream osss("saver.txt");
+//     std::ofstream osss("saver.txt");
 
-    tr->saves(empty, osss);
-    // JSONarray str;
-    // str.add(tr->get(l)->clone());
-    // str.print(); 
-    // tr->get(l)->print();
+//     tr->saves(empty, osss);
+//     // JSONarray str;
+//     // str.add(tr->get(l)->clone());
+//     // str.print(); 
+//     // tr->get(l)->print();
 
     
 
-    // std::cout << tr->set(v , "\"mercedes\"") << '\n';
-    // tr->set({"model" , "car"}, "\"benz220\"");
+//     // std::cout << tr->set(v , "\"mercedes\"") << '\n';
+//     // tr->set({"model" , "car"}, "\"benz220\"");
 
-    // tr->set(v, "\"passat\"");
+//     // tr->set(v, "\"passat\"");
 
-    // tr->print();
+//     // tr->print();
 
-    // std::cout << tr->set({"peis","arr"}, "\"gotin\"") << '\n';
+//     // std::cout << tr->set({"peis","arr"}, "\"gotin\"") << '\n';
 
-    // tr->print();
+//     // tr->print();
 
-    // tr->create(v , "\"toyota\""); // the path is reversed if you want to do something like this car:brand:mercedes you write("brand", "car")
+//     // tr->create(v , "\"toyota\""); // the path is reversed if you want to do something like this car:brand:mercedes you write("brand", "car")
 
-    // tr->delete_element(v);
+//     // tr->delete_element(v);
 
-    // tr->set(v , "\"passat 1.9tdi chiposan\"");
+//     // tr->set(v , "\"passat 1.9tdi chiposan\"");
 
-    is.close();
+//     is.close();
 
-    // std::ofstream os("saver.txt");
+//     // std::ofstream os("saver.txt");
 
-    // tr->move(v,l);
-    // tr->saves(v, os);
+//     // tr->move(v,l);
+//     // tr->saves(v, os);
 
-    // os.close();
+//     // os.close();
 
-    // std::ifstream in("saver.txt");
+//     // std::ifstream in("saver.txt");
 
-    // JSONBase* lerem = a.create(in);
+//     // JSONBase* lerem = a.create(in);
 
-    // lerem->print();
+//     // lerem->print();
 
-    // tr->print();
+//     // tr->print();
 
-    return 0;
-}
+//     return 0;
+// }

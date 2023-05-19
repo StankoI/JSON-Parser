@@ -49,8 +49,6 @@ void JSONarray::print() const
             value[i]->print();
             std::cout << '\n';
         }
-        // value[i]->print();
-        // std::cout << '\n';
     }
     std::cout << ']';
 };
@@ -118,7 +116,6 @@ void JSONarray::create(std::vector<std::string> &reversePath, std::string str)
 
         std::ifstream is("convert.txt");
 
-        // JSONFile a;
         JSONBase *strConvert = a.create(is);
 
         JSONObject *creater = new JSONObject;
@@ -130,19 +127,13 @@ void JSONarray::create(std::vector<std::string> &reversePath, std::string str)
 
         for (std::size_t i = 1; i < reversePath.size(); i++)
         {
-            // JSONObject* temp = new JSONObject;
             pairTemp.first = reversePath[i];
             pairTemp.second = creater->clone();
             creater->add_element(pairTemp);
         }
 
         value.push_back(creater->clone());
-        delete creater; // check for problem
-
-        // pairTemp.first = reversePath[reversePath.size()-1];
-        // pairTemp.second = creater->clone();
-
-        // this->key_value.push_back(pairTemp);
+        delete creater;
     }
 }
 
@@ -157,8 +148,6 @@ bool JSONarray::is_element_exist(std::vector<std::string> &reversePath)
                 value[i]->is_element_exist(reversePath);
                 return true;
             }
-            // value[i]->is_element_exist(reversePath);
-            // return true;
         }
     }
     return false;
@@ -174,7 +163,6 @@ void JSONarray::delete_element(std::vector<std::string> &reversePath)
             {
                 value[i]->delete_element(reversePath);
             }
-            // value[i]->delete_element(reversePath);
         }
     }
 }
@@ -213,29 +201,26 @@ JSONBase *JSONarray::get(std::vector<std::string> &reversePath)
 
 void JSONarray::addbByPath(std::vector<std::string> &reversePath, const std::string &key, JSONBase *element)
 {
-    // for (std::size_t i = 0; i < this->value.size(); i++)
-    // {
-        if(reversePath.empty())
+    if (reversePath.empty())
+    {
+        std::pair<std::string, JSONBase *> temp;
+        temp.first = key;
+        temp.second = element->clone();
+        JSONObject *obj = new JSONObject;
+        obj->add_element(temp);
+        value.push_back(obj->clone());
+        delete obj;
+    }
+    else
+    {
+        for (std::size_t i = 0; i < value.size(); i++)
         {
-            std::pair<std::string, JSONBase*> temp;
-            temp.first = key;
-            temp.second = element->clone();
-            JSONObject* obj = new JSONObject;
-            obj->add_element(temp);
-            value.push_back(obj->clone()); 
-            delete obj; 
-        }
-        else
-        {
-            for(std::size_t i = 0; i < value.size(); i++)
+            if (value[i]->getType() == "object")
             {
-                if(value[i]->getType() == "object")
-                {
-                    value[i]->addbByPath(reversePath, key, element);
-                }
+                value[i]->addbByPath(reversePath, key, element);
             }
         }
-    // }
+    }
 }
 
 JSONarray::~JSONarray()
