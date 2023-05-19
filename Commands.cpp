@@ -528,11 +528,3 @@ void Commands::commandDelete(const std::string &command)
     this->object->delete_element(path);
 }
 
-int main()
-{
-    Commands a;
-    a.interpretator();
-
-
-    return 0;
-}
