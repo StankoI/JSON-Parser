@@ -27,9 +27,7 @@ class JSONObject : public JSONBase{
     
     void print() const;
 
-    std::string getType() const;
-
-    // void set_key(const std::string& el, size_t index); 
+    std::string getType() const; 
 
     void add_element(std::pair<std::string, JSONBase*>); 
 

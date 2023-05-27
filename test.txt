@@ -1,1 +1,1 @@
-{ name:"ivan" work:"fmi" salary:5600 car:{ brand:"volkswagen" model:"golf IV 1.9tdi" } arr:[ "neshto" { peis:"pedal" } ] human:{ pets:{ cat:"rumen" dog:"sharo" goldenFish:"Adolf" } } } 
+{ name:"ivan" work:"fantastico" salary:820 car:{ brand:"volkswagen" model:"golf IV 1.9tdi" } pets:{ cat:"rumen" dog:"sharo" goldenFish:"Adolf" } }
